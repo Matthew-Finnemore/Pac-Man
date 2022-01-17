@@ -1,6 +1,6 @@
-*{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
 }
 body {
   display: flex;
@@ -42,8 +42,6 @@ h3 {
   height: 20px;
 }
 
-
-
 .wall {
   background-color: #152db9;
 }
@@ -65,52 +63,43 @@ h3 {
   background-color: red;
   border-radius: 0%;
   border: none;
-
 }
 
 .pinky {
   background-color: pink;
-   border-radius: 0%;
-   border: none;
-
-   
+  border-radius: 0%;
+  border: none;
 }
 
 .inky {
   background-color: rgb(252, 255, 255);
-   border-radius: 0%;
-   border: none;
-
-   
+  border-radius: 0%;
+  border: none;
 }
 
 .clyde {
   background-color: orange;
-   border-radius: 0%;
-   border: none;
-
-   
+  border-radius: 0%;
+  border: none;
 }
-
 
 .pac-man {
   background-image: url(/images/pacman.png);
   background-size: cover;
-  background-color: yellow;
+  /* background-color: yellow; */
   /* border-radius: 10px; */
-  
 }
-.pac-man-right{
-    transform: rotate(0deg);
+.pac-man-right {
+  transform: rotate(0deg);
 }
 .pac-man-left {
-    transform: rotateY(180deg)
+  transform: rotateY(180deg);
 }
 .pac-man-up {
- transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 .pac-man-down {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .scared-ghost {
