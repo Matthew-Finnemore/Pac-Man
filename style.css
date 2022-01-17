@@ -1,0 +1,129 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: "Press Start 2P", cursive;
+  background-color: #012a00;
+  color: #f2cb38;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+}
+h1 {
+  font-size: 40px;
+  margin-bottom: 0.5em;
+  margin-top: -2em;
+  width: 100%;
+  text-align: center;
+}
+h3 {
+  font-size: 24px;
+  margin-bottom: 1.5em;
+  width: 100%;
+  text-align: center;
+}
+.game-grid {
+  background-color: black;
+  display: flex;
+  flex-wrap: wrap;
+  width: 560px;
+  height: 560px;
+  border: solid #f2cb38;
+}
+
+.game-grid div {
+  width: 20px;
+  height: 20px;
+}
+
+
+
+.wall {
+  background-color: #152db9;
+}
+
+.power-pellet {
+  background-color: #fcdc68;
+  border: 3px black solid;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+.pac-dot {
+  background-color: #f2cb38;
+  border: 7px solid black;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.blinky {
+  background-color: red;
+  border-radius: 0%;
+  border: none;
+
+}
+
+.pinky {
+  background-color: pink;
+   border-radius: 0%;
+   border: none;
+
+   
+}
+
+.inky {
+  background-color: rgb(252, 255, 255);
+   border-radius: 0%;
+   border: none;
+
+   
+}
+
+.clyde {
+  background-color: orange;
+   border-radius: 0%;
+   border: none;
+
+   
+}
+
+
+.pac-man {
+  background-image: url(/images/pacman.png);
+  background-size: cover;
+  background-color: yellow;
+  /* border-radius: 10px; */
+  
+}
+.pac-man-right{
+    transform: rotate(0deg);
+}
+.pac-man-left {
+    transform: rotateY(180deg)
+}
+.pac-man-up {
+ transform: rotate(-90deg);
+}
+.pac-man-down {
+    transform: rotate(90deg);
+}
+
+.scared-ghost {
+  background-color: aquamarine;
+}
+@media (min-width: 800px) {
+  body {
+    background-image: none;
+  }
+}
+@media (min-width: 1500px) and (min-height: 800px) {
+  body {
+    background-image: url(/images/background-PacMan.jpg);
+    background-size: contain;
+  }
+}
