@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function eatenScaredGhost() {
   
     ghosts.forEach((ghost) => {
-      if (ghost.currentIndex === pacmanCurrentIndex) {
+      if (ghost.currentIndex === pacmanCurrentIndex && ghost.isScared) {
         squares[ghost.currentIndex].classList.remove(
           ghost.className,
           "ghost",
@@ -364,14 +364,4 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
   }
-  
-// 
-  //  function pacDotEaten() {
-  //   if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
-  //     score++;
-  //     // @ts-ignore
-  //     scoreDisplay.textContent = score;
-  //     squares[pacmanCurrentIndex].classList.remove("pac-dot");
-  //   }
-  // }
 });
