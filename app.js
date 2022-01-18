@@ -121,7 +121,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // left - 37
   // right - 39
   function movePacman(e) {
-    squares[pacmanCurrentIndex].classList.remove("pac-man");
+    squares[pacmanCurrentIndex].classList.remove(
+      "pac-man",
+      "pac-man-up",
+      "pac-man-right",
+      "pac-man-left",
+      "pac-man-down"
+    );
     switch (e.keyCode) {
       case 37: //left
         if (
@@ -262,7 +268,11 @@ document.addEventListener("DOMContentLoaded", () => {
         squares[ghost.currentIndex].classList.remove(ghost.className);
         squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
         ghost.currentIndex += -width;
-        squares[ghost.currentIndex].classList.add(ghost.className, "ghost","pac-man-right");
+        squares[ghost.currentIndex].classList.add(
+          ghost.className,
+          "ghost",
+          "pac-man-right"
+        );
       } else if (
         !squares[ghost.currentIndex + direction].classList.contains("ghost") &&
         !squares[ghost.currentIndex + direction].classList.contains("wall")
