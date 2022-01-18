@@ -60,27 +60,43 @@ h3 {
 }
 
 .blinky {
-  background-color: red;
+  background-image: url(/images/ghost1.png);
+  background-position: center;
+  background-size: contain;
+  background-color: black;
   border-radius: 0%;
   border: none;
+  transform: rotate(0deg);
 }
 
 .pinky {
-  background-color: pink;
+  background-image: url(/images/ghost2.png);
+  background-position: center;
+  background-size: contain;
+  background-color: black;
   border-radius: 0%;
   border: none;
+  transform: rotate(0deg);
 }
 
 .inky {
-  background-color: rgb(252, 255, 255);
+  background-image: url(/images/ghost3.png);
+  background-position: center;
+  background-size: contain;
+  background-color: black;
   border-radius: 0%;
   border: none;
+  transform: rotate(0deg);
 }
 
 .clyde {
-  background-color: orange;
+  background-image: url(/images/ghost4.png);
+  background-position: center;
+  background-size: contain;
+  background-color: black;
   border-radius: 0%;
   border: none;
+  transform: rotate(0deg);
 }
 
 .pac-man {
@@ -103,7 +119,10 @@ h3 {
 }
 
 .scared-ghost {
-  background-color: aquamarine;
+  background-image: url(/images/ghost-scared.png);
+  background-color: black;
+  background-position: center;
+  background-size: contain;
 }
 @media (min-width: 800px) {
   body {

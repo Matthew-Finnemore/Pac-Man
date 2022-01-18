@@ -114,8 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //   return [index % width, Math.floor(index / width)]
   // }
 
-
-
   //move pacman
 
   // down - 40
@@ -176,19 +174,17 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     squares[pacmanCurrentIndex].classList.add("pac-man");
     squares[pacmanCurrentIndex].classList.add(pacManDirection);
-    if (squares[pacmanCurrentIndex].classList.contains('ghost')) {
-      eatenScaredGhost(); 
+    if (squares[pacmanCurrentIndex].classList.contains("ghost")) {
+      eatenScaredGhost();
     }
     pacDotEaten();
-    eatenScaredGhost(); 
+    eatenScaredGhost();
     powerPelletEaten();
     checkForGameOver();
     checkForWin();
   }
 
   document.addEventListener("keyup", movePacman);
-
-
 
   // what happens when you eat a pac-dot
   function pacDotEaten() {
@@ -231,9 +227,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //all my ghosts
   const ghosts = [
-    new Ghost("blinky", 348, 250),
-    new Ghost("pinky", 376, 400),
-    new Ghost("inky", 351, 300),
+    new Ghost("blinky", 348, 500),
+    new Ghost("pinky", 376, 500),
+    new Ghost("inky", 351, 500),
     new Ghost("clyde", 379, 500),
   ];
 
@@ -252,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ghost.timerId = setInterval(function () {
       //if the next squre your ghost is going to go to does not have a ghost and does not have a wall
-    
+
       if (
         ghost.currentIndex === 349 ||
         ghost.currentIndex === 377 ||
@@ -263,21 +259,28 @@ document.addEventListener("DOMContentLoaded", () => {
         ghost.currentIndex === 378 ||
         ghost.currentIndex === 350
       ) {
-     
         squares[ghost.currentIndex].classList.remove(ghost.className);
         squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
         ghost.currentIndex += -width;
-        squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
+        squares[ghost.currentIndex].classList.add(ghost.className, "ghost","pac-man-right");
       } else if (
         !squares[ghost.currentIndex + direction].classList.contains("ghost") &&
         !squares[ghost.currentIndex + direction].classList.contains("wall")
       ) {
         //remove the ghosts classes
         squares[ghost.currentIndex].classList.remove(ghost.className);
-        squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
+        squares[ghost.currentIndex].classList.remove(
+          "ghost",
+          "scared-ghost",
+          "pac-man-right"
+        );
         //move into that space
         ghost.currentIndex += direction;
-        squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
+        squares[ghost.currentIndex].classList.add(
+          ghost.className,
+          "ghost",
+          "pac-man-right"
+        );
         if (
           ghost.isScared &&
           squares[ghost.currentIndex].classList.contains("pac-man")
@@ -285,7 +288,8 @@ document.addEventListener("DOMContentLoaded", () => {
           squares[ghost.currentIndex].classList.remove(
             ghost.className,
             "ghost",
-            "scared-ghost"
+            "scared-ghost",
+            "pac-man-right"
           );
           ghost.currentIndex = ghost.startIndex;
           score += 100;
@@ -338,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //check for a win - more is when this score is reached
   function checkForWin() {
-    if (score === 274) {
+    if (score >= 1000) {
       ghosts.forEach((ghost) => clearInterval(ghost.timerId));
       document.removeEventListener("keyup", movePacman);
       setTimeout(function () {
@@ -348,7 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // if Scared ghost is in the square after key up
   function eatenScaredGhost() {
-  
     ghosts.forEach((ghost) => {
       if (ghost.currentIndex === pacmanCurrentIndex && ghost.isScared) {
         squares[ghost.currentIndex].classList.remove(
@@ -362,6 +365,6 @@ document.addEventListener("DOMContentLoaded", () => {
         scoreDisplay.textContent = score;
         squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
       }
-    })
+    });
   }
 });
