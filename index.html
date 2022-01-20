@@ -1,21 +1,62 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Pac-man</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
     <script src="app.js" charset="utf-8"></script>
   </head>
   <body>
-    <h1> PAC-MAN vs <span id="user">Users</span></h1>
-    <h3>Current Score:<span id="score"></span></h3>
+    <div class="game-div">
+      <div class="game-screen">
+        <h2 class="game-screen-title">
+          PAC-MAN
+        </h2>
+        <h3>Current Score:<span id="score"></span></h3>
+        <h3>Highscore:<span id="highScore">1520</span></h3>
 
-    <div class="game-grid"></div>
-
-    
-
+        <div class="game-grid"></div>
+      </div>
+      <div id="start-page" class="start-page">
+        <div class="container">
+          <h1 class="welcome">Welcome to Educational Pac-Man!</h1>
+          <p class="created">Created by Matthew Finnemore</p>
+          <ul class="rules">
+            <li>Get as many points as possible!</li>
+            <li>Earn points by eating the dots (1pt).</li>
+            <li>
+              Eat power dots (10pts), these make the ghosts scared (blue) which
+              you can then eat (100pts).
+            </li>
+            <li>
+              After every 150pts you will get a question. Answer the question
+              correctly to get a power-up. Answer incorrectly or run out of time
+              and you recieve a random forfeit.
+            </li>
+            <li>If a ghost get to you, its Game Over!</li>
+          </ul>
+          <button id="start-game-btn" class="start-game-btn btn">Start!</button>
+        </div>
+      </div>
+      <div class="question-div none" id="questionPanel">
+        <div class="container">
+          <h3 class="question-title">Question Time!</h3>
+          <div class="question">
+            What is <span id="numberOne">1</span><span id="operator">*</span
+            ><span id="numberTwo">3</span>
+           
+            <input type="any" id="answer" />
+            <button type="submit" class="submit btn" id="submit">Submit!</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

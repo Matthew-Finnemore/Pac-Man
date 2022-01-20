@@ -1,11 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const welcomePage = document.getElementById("start-page");
+  const startGameBtn = document.getElementById("start-game-btn");
   const scoreDisplay = document.getElementById("score");
+  const questionPanel = document.getElementById("questionPanel");
+  const submitButton = document.getElementById("submit");
   let pacManDirection = "pac-man-right";
   const width = 28;
   let score = 0;
-  scoreDisplay.innerText = " " + score;
-
+  const squares = [];
   const grid = document.querySelector(".game-grid");
+  let pacmanCurrentIndex = 490; //starting index
+  let qOneAnswered = false;
+  let qTwoAnswered = false;
+  let qThreeAnswered = false;
+  let qFourAnswered = false;
+  let qFiveAnswered = false;
+
   // 0 - pac-dots
   // 1 - wall
   // 2 - ghost-lair
@@ -81,7 +91,25 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   let chosenLayout = layout1;
-  const squares = [];
+  createBoard();
+
+  scoreDisplay.innerText = `${score}`;
+  startGameBtn.addEventListener("click", startGame);
+  document.addEventListener("keyup", movePacman);
+  submitButton.addEventListener("click", submit);
+
+  //Start the Game on click of the start button
+  function startGame() {
+    welcomePage.classList.add("none");
+    //draw my ghosts onto the grid
+    ghosts.forEach((ghost) => {
+      squares[ghost.currentIndex].classList.add(ghost.className);
+      squares[ghost.currentIndex].classList.add("ghost");
+    });
+
+    //move the Ghosts randomly
+    ghosts.forEach((ghost) => moveGhost(ghost));
+  }
 
   //create your board
   function createBoard() {
@@ -89,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const square = document.createElement("div");
       grid.appendChild(square);
       squares.push(square);
-      // squares[i].textContent = i
 
       //add layout to the board
       if (chosenLayout[i] === 0) {
@@ -103,23 +130,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-  createBoard();
 
-  //create Characters
-  //draw pacman onto the board
-  let pacmanCurrentIndex = 490;
   squares[pacmanCurrentIndex].classList.add("pac-man");
-  //get the coordinates of pacman on the grid with X and Y axis
-  // function getCoordinates(index) {
-  //   return [index % width, Math.floor(index / width)]
-  // }
 
-  //move pacman
-
-  // down - 40
-  // up key - 38
-  // left - 37
-  // right - 39
   function movePacman(e) {
     squares[pacmanCurrentIndex].classList.remove(
       "pac-man",
@@ -186,11 +199,24 @@ document.addEventListener("DOMContentLoaded", () => {
     pacDotEaten();
     eatenScaredGhost();
     powerPelletEaten();
-    checkForGameOver();
+    // checkForGameOver();
     checkForWin();
+    checkForQuestion();
+  }
+  // Show the Question Panel and generate Question
+
+  function checkForQuestion() {
+    if (score >= 50 && qOneAnswered === false) {
+      questionPanel.classList.remove("none");
+      qOneAnswered = true;
+      ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+    }
   }
 
-  document.addEventListener("keyup", movePacman);
+  function submit() {
+    questionPanel.classList.add("none");
+     ghosts.forEach((ghost) => moveGhost(ghost));
+  }
 
   // what happens when you eat a pac-dot
   function pacDotEaten() {
@@ -234,19 +260,10 @@ document.addEventListener("DOMContentLoaded", () => {
   //all my ghosts
   const ghosts = [
     new Ghost("blinky", 348, 500),
-    new Ghost("pinky", 376, 500),
-    new Ghost("inky", 351, 500),
-    new Ghost("clyde", 379, 500),
+    new Ghost("pinky", 376, 250),
+    new Ghost("inky", 351, 320),
+    new Ghost("clyde", 379, 140),
   ];
-
-  //draw my ghosts onto the grid
-  ghosts.forEach((ghost) => {
-    squares[ghost.currentIndex].classList.add(ghost.className);
-    squares[ghost.currentIndex].classList.add("ghost");
-  });
-
-  //move the Ghosts randomly
-  ghosts.forEach((ghost) => moveGhost(ghost));
 
   function moveGhost(ghost) {
     const directions = [-1, +1, width, -width];
@@ -332,7 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
         scoreDisplay.textContent = score;
         squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
       }
-      checkForGameOver();
+      // checkForGameOver()
     }, ghost.speed);
   }
 
