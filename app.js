@@ -3,7 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const startGameBtn = document.getElementById("start-game-btn");
   const scoreDisplay = document.getElementById("score");
   const questionPanel = document.getElementById("questionPanel");
+  const numberOne = document.getElementById("numberOne");
+  const numberTwo = document.getElementById("numberTwo");
+  const operator = document.getElementById("operator");
   const submitButton = document.getElementById("submit");
+  const questions = document.getElementById("question");
+  const powerUpDiv = document.getElementById("power-up-div");
+  let powerups = document.querySelectorAll(".power-up");
   let pacManDirection = "pac-man-right";
   const width = 28;
   let score = 0;
@@ -15,6 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let qThreeAnswered = false;
   let qFourAnswered = false;
   let qFiveAnswered = false;
+  let answer;
+  let answeringQuestion = false;
+  const operatorChoice = ["x", "-", "+", "÷"];
 
   // 0 - pac-dots
   // 1 - wall
@@ -134,88 +143,123 @@ document.addEventListener("DOMContentLoaded", () => {
   squares[pacmanCurrentIndex].classList.add("pac-man");
 
   function movePacman(e) {
-    squares[pacmanCurrentIndex].classList.remove(
-      "pac-man",
-      "pac-man-up",
-      "pac-man-right",
-      "pac-man-left",
-      "pac-man-down"
-    );
-    switch (e.keyCode) {
-      case 37: //left
-        if (
-          pacmanCurrentIndex % width !== 0 &&
-          !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
-        )
-          pacmanCurrentIndex -= 1;
-        pacManDirection = "pac-man-left";
-        if (squares[pacmanCurrentIndex - 1] === squares[363]) {
-          pacmanCurrentIndex = 391;
-        }
-        break;
-      case 38: //up
-        if (
-          pacmanCurrentIndex - width >= 0 &&
-          !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
-        )
-          pacmanCurrentIndex -= width;
-        pacManDirection = "pac-man-up";
-        break;
-      case 39: //right
-        if (
-          pacmanCurrentIndex % width < width - 1 &&
-          !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
-        )
-          pacmanCurrentIndex += 1;
-        pacManDirection = "pac-man-right";
-        if (squares[pacmanCurrentIndex + 1] === squares[392]) {
-          pacmanCurrentIndex = 364;
-        }
-        break;
-      case 40: //down
-        if (
-          pacmanCurrentIndex + width < width * width &&
-          !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
-        )
-          pacmanCurrentIndex += width;
-        pacManDirection = "pac-man-down";
-        break;
-    }
-    squares[pacmanCurrentIndex].classList.remove(
-      "pac-man-left",
-      "pac-man-right",
-      "pac-man-up",
-      "pac-man-down"
-    );
-    squares[pacmanCurrentIndex].classList.add("pac-man");
-    squares[pacmanCurrentIndex].classList.add(pacManDirection);
-    if (squares[pacmanCurrentIndex].classList.contains("ghost")) {
+    if (answeringQuestion === false) {
+      squares[pacmanCurrentIndex].classList.remove(
+        "pac-man",
+        "pac-man-up",
+        "pac-man-right",
+        "pac-man-left",
+        "pac-man-down"
+      );
+      switch (e.keyCode) {
+        case 37: //left
+          if (
+            pacmanCurrentIndex % width !== 0 &&
+            !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
+            !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
+          )
+            pacmanCurrentIndex -= 1;
+          pacManDirection = "pac-man-left";
+          if (squares[pacmanCurrentIndex - 1] === squares[363]) {
+            pacmanCurrentIndex = 391;
+          }
+          break;
+        case 38: //up
+          if (
+            pacmanCurrentIndex - width >= 0 &&
+            !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
+            !squares[pacmanCurrentIndex - width].classList.contains(
+              "ghost-lair"
+            )
+          )
+            pacmanCurrentIndex -= width;
+          pacManDirection = "pac-man-up";
+          break;
+        case 39: //right
+          if (
+            pacmanCurrentIndex % width < width - 1 &&
+            !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
+            !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
+          )
+            pacmanCurrentIndex += 1;
+          pacManDirection = "pac-man-right";
+          if (squares[pacmanCurrentIndex + 1] === squares[392]) {
+            pacmanCurrentIndex = 364;
+          }
+          break;
+        case 40: //down
+          if (
+            pacmanCurrentIndex + width < width * width &&
+            !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
+            !squares[pacmanCurrentIndex + width].classList.contains(
+              "ghost-lair"
+            )
+          )
+            pacmanCurrentIndex += width;
+          pacManDirection = "pac-man-down";
+          break;
+      }
+      squares[pacmanCurrentIndex].classList.remove(
+        "pac-man-left",
+        "pac-man-right",
+        "pac-man-up",
+        "pac-man-down"
+      );
+      squares[pacmanCurrentIndex].classList.add("pac-man");
+      squares[pacmanCurrentIndex].classList.add(pacManDirection);
+      if (squares[pacmanCurrentIndex].classList.contains("ghost")) {
+        eatenScaredGhost();
+      }
+      pacDotEaten();
       eatenScaredGhost();
+      powerPelletEaten();
+      // checkForGameOver();
+      checkForWin();
+      checkForQuestion();
     }
-    pacDotEaten();
-    eatenScaredGhost();
-    powerPelletEaten();
-    // checkForGameOver();
-    checkForWin();
-    checkForQuestion();
   }
   // Show the Question Panel and generate Question
 
   function checkForQuestion() {
-    if (score >= 50 && qOneAnswered === false) {
-      questionPanel.classList.remove("none");
-      qOneAnswered = true;
-      ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+    switch (true) {
+      case score >= 10 && qOneAnswered === false:
+        makeQuestion();
+        qOneAnswered = true;
+        break;
+      case score >= 20 && qTwoAnswered === false:
+        makeQuestion();
+        qTwoAnswered = true;
+        break;
+      case score >= 30 && qThreeAnswered === false:
+        makeQuestion();
+        qThreeAnswered = true;
+        break;
+      case score >= 40 && qFourAnswered === false:
+        makeQuestion();
+        qFourAnswered = true;
+        break;
+      case score >= 50 && qFiveAnswered === false:
+        makeQuestion();
+        qFiveAnswered = true;
+        break;
     }
   }
 
   function submit() {
-    questionPanel.classList.add("none");
-     ghosts.forEach((ghost) => moveGhost(ghost));
+    let answerInput = document.querySelector("input");
+    answeringQuestion = false;
+
+    if (answerInput.value.toString() === answer.toString()) {
+      questions.classList.add("none");
+      powerUpDiv.classList.remove("none"); // add opposite to powerup func
+      answerInput.value = "";
+
+      for (let powerup of powerups) {
+        powerup.classList.remove("none");
+      }
+    } else {
+      alert("Your Wrong! Why not try again");
+    }
   }
 
   // what happens when you eat a pac-dot
@@ -266,6 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   function moveGhost(ghost) {
+    console.log(ghost.speed)
     const directions = [-1, +1, width, -width];
     let direction = directions[Math.floor(Math.random() * directions.length)];
 
@@ -394,4 +439,68 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+  function makeQuestion() {
+    answeringQuestion = true;
+    questionPanel.classList.remove("none");
+    questions.classList.remove("none");
+    document.getElementById("answer").focus();
+    ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+    let firstValue = Math.floor(Math.random() * 10 + 1);
+    let secondValue = Math.floor(Math.random() * 10 + 1);
+    let operatorRandom =
+      operatorChoice[Math.floor(Math.random() * operatorChoice.length)];
+    if (operatorRandom === "÷" && firstValue % secondValue != 0) {
+      console.log("here");
+      operatorRandom =
+        operatorChoice[Math.floor(Math.random() * (operatorChoice.length - 1))];
+    }
+    console.log(firstValue, secondValue);
+    if (operatorRandom === "-" && firstValue < secondValue) {
+      console.log("here");
+      [firstValue, secondValue] = [secondValue, firstValue];
+    }
+    console.log(firstValue, secondValue);
+    operator.innerHTML = operatorRandom;
+    numberOne.innerHTML = firstValue.toString();
+    numberTwo.innerHTML = secondValue.toString();
+    switch (operatorRandom) {
+      case "x":
+        answer = firstValue * secondValue;
+        break;
+      case "-":
+        answer = firstValue - secondValue;
+        break;
+      case "+":
+        answer = firstValue + secondValue;
+        break;
+      case "÷":
+        answer = firstValue / secondValue;
+        break;
+    }
+    return answer;
+  }
+  document.getElementById("slow-ghosts").addEventListener("click", slowGhosts);
+  document
+    .getElementById("delete-ghost")
+    .addEventListener("click", deleteGhost);
+  document
+    .getElementById("double-dot-points")
+    .addEventListener("click", doubleDotPoints);
+
+  function slowGhosts() {
+    ghosts.forEach((ghost) => {
+      ghost.speed = 1000;
+    });
+    for (let powerup of powerups) {
+      powerup.classList.add("none");
+    }
+    powerUpDiv.classList.add("none"); // add opposite to powerup func
+    ghosts.forEach((ghost) => moveGhost(ghost)); //move to powerup choice
+    questionPanel.classList.add("none");
+  }
+
+  function deleteGhost() {}
+
+  function doubleDotPoints() {}
+  //end of tags
 });

@@ -7,16 +7,18 @@ html {
   font-family: "Press Start 2P", cursive;
   color: #f2cb38;
 }
-.none {
-  display: none;
+
+body {
+  width: 100%;
+  background-color: #012a00;
 }
 .start-page {
   position: absolute;
   top: 0;
-  min-height: 100%;
   width: 100%;
   z-index: 2;
   background-color: #012a00;
+  height: 100%;
 }
 .welcome {
   font-size: 2.7rem;
@@ -31,9 +33,18 @@ html {
   opacity: 0.5;
 }
 .container {
-  max-width: 60ch;
+  width: clamp(40ch, 60ch, 70%);
   margin: 3em auto;
-  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+form {
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .question-div {
   position: absolute;
@@ -55,20 +66,12 @@ html {
   justify-content: center;
   align-items: center;
 }
-#numberOne {
-  margin: 2em 0 1em 0;
-}
-#operator {
-  margin-bottom: 1em;
-}
-#numberTwo {
-  margin-bottom: 2em;
-}
+
 #answer {
   height: 3rem;
-  background-color: #f2cb38;
   border: none;
-  color: black;
+  background-color: black;
+  color: #f2cb38;
   font-size: 2.8rem;
   text-align: center;
   width: 10rem;
@@ -104,6 +107,9 @@ li {
   text-decoration: underline;
   transition: transform 500ms ease-in-out;
 }
+.start-game-btn {
+  margin-bottom: 500px;
+}
 .start-game-btn:hover,
 .start-game-btn:focus {
   background-color: black;
@@ -116,6 +122,46 @@ li {
 .submit:hover,
 .submit:focus {
   transform: scale(1.05);
+  cursor: pointer;
+}
+.question-flex {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin: 1.2em;
+  padding: 2em;
+}
+.question-flex span {
+  display: block;
+}
+.correct{
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+.power-up-div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.choose-a-powerup{
+  font-size: 1.8rem;
+}
+.power-up{
+  text-align: center;
+  margin-top: 3rem;
+  background-color: rgba(0, 0, 0, 0.781);
+  width: 60%;
+  padding: 1rem 2.5rem;
+  color: white;
+  transition: color 200ms;
+}
+.power-up:hover,
+.power-up:focus{
+  color: #f2cb38;
   cursor: pointer;
 }
 .game-div {
@@ -221,8 +267,6 @@ h3 {
 .pac-man {
   background-image: url(/images/pacman.png);
   background-size: cover;
-  /* background-color: yellow; */
-  /* border-radius: 10px; */
 }
 .pac-man-right {
   transform: rotate(0deg);
@@ -242,6 +286,9 @@ h3 {
   background-color: black;
   background-position: center;
   background-size: contain;
+}
+.none {
+  display: none;
 }
 @media (min-width: 800px) {
   body {
