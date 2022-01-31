@@ -11,33 +11,34 @@
       rel="stylesheet"
     />
     <script src="app.js" charset="utf-8" defer></script>
+    <title>Educational Pacman</title>
   </head>
   <body>
     <div class="game-div">
       <div class="game-screen">
         <h2 class="game-screen-title">PAC-MAN</h2>
         <h3>Current Score:<span id="score"></span></h3>
-        <h3>Highscore:<span id="highScore">1520</span></h3>
-
         <div class="game-grid"></div>
+        <p class="time-left none" id="time-left-scared"> You have <span id="end-time-ghost-scared"></span>seconds to eat the ghosts</p>
+        <p class="time-left none" id="time-left-slow"> Slow Ghost Power-up ends in: <span id="end-time-ghost-slow"></span></p>
+        <p class="time-left none" id="time-left-ghost"> Ghost returns in:  <span id="ghost-return-timer"></span></p>
       </div>
       <div id="start-page" class="start-page">
         <div class="container">
-          <h1 class="welcome">Welcome to Educational Pac-Man!</h1>
+          <h2 class="welcome">Welcome to</h2>
+          <h1 class="edu-pacman"> Educational Pac-Man!</h1>
           <p class="created">Created by Matthew Finnemore</p>
           <ul class="rules">
             <li>Get as many points as possible!</li>
-            <li>Earn points by eating the dots (1pt).</li>
+            <li>Earn 1 point for every dot eaten.</li>
             <li>
-              Eat power dots (10pts), these make the ghosts scared (blue) which
-              you can then eat (100pts).
+              If you eat a power dot, you get 10 points, they also make the ghosts scared so that you can eat them for 100 points!
             </li>
             <li>
               After every 150pts you will get a question. Answer the question
-              correctly to get a power-up. Answer incorrectly or run out of time
-              and you recieve a random forfeit.
+              correctly to get a power-up!
             </li>
-            <li>If a ghost get to you, its Game Over!</li>
+            <li>If a ghost gets to you, its Game Over!</li>
           </ul>
           <button id="start-game-btn" class="start-game-btn btn">Start!</button>
         </div>
@@ -51,14 +52,15 @@
               <span id="numberOne">1</span><span id="operator">*</span
               ><span id="numberTwo">3</span>
             </div>
-            <form action="#" autocomplete="off">
+            <form action="#" autocomplete="off" onsubmit="return false">
               <input
                 type="text"
                 placeholder="?"
                 id="answer"
                 inputmode="numeric"
               />
-              <button type="submit" class="submit btn" id="submit" value="">
+              <p class="wrong-answer none" id="wrong-answer">Not quite, try again!</p>
+              <button type="" class="submit btn" id="submit" value="">
                 Submit!
               </button>
             </form>
@@ -69,9 +71,6 @@
             <p class="power-up none" id="slow-ghosts">Slow Ghosts</p>
             <p class="power-up none" id="delete-ghost">
               Delete one Ghost
-            </p>
-            <p class="power-up none" id="double-dot-points">
-              Dots = 20 points for 10 seconds
             </p>
           </div>
         </div>

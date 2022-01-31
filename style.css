@@ -20,18 +20,6 @@ body {
   background-color: #012a00;
   height: 100%;
 }
-.welcome {
-  font-size: 2.7rem;
-  color: #f2cb38;
-  margin-bottom: 0.3em;
-  text-align: center;
-}
-.created {
-  text-align: end;
-  margin-bottom: 4em;
-  color: white;
-  opacity: 0.5;
-}
 .container {
   width: clamp(40ch, 60ch, 70%);
   margin: 3em auto;
@@ -39,6 +27,26 @@ body {
   flex-direction: column;
   align-items: center;
 }
+.welcome {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+.edu-pacman {
+  width: 100%;
+  font-size: 2.5rem;
+  color: #f2cb38;
+  margin-bottom: 0.3em;
+  text-align: center;
+}
+.created {
+  width: 100%;
+  text-align: end;
+  margin-bottom: 4em;
+  margin-right: 8rem;
+  color: white;
+  opacity: 0.5;
+}
+
 form {
   margin: 0 auto;
   width: 100%;
@@ -82,6 +90,11 @@ form {
 #answer:focus {
   border: none;
 }
+.wrong-answer {
+  font-size: 0.8rem;
+  color: red;
+  margin-top: -2rem;
+}
 
 ul {
   box-sizing: border-box;
@@ -90,10 +103,10 @@ ul {
 }
 li {
   margin: 1em 0px 0px 0px;
-  line-height: 1.2;
+
   font-size: 1.4rem;
   border-bottom: white 1px dotted;
-  padding-bottom: 1.4em;
+  padding-bottom: 1em;
 }
 .btn {
   display: block;
@@ -108,7 +121,7 @@ li {
   transition: transform 500ms ease-in-out;
 }
 .start-game-btn {
-  margin-bottom: 500px;
+  margin-bottom: 50px;
 }
 .start-game-btn:hover,
 .start-game-btn:focus {
@@ -136,21 +149,21 @@ li {
 .question-flex span {
   display: block;
 }
-.correct{
+.correct {
   text-align: center;
   font-size: 3rem;
   margin-bottom: 2rem;
 }
-.power-up-div{
+.power-up-div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.choose-a-powerup{
+.choose-a-powerup {
   font-size: 1.8rem;
 }
-.power-up{
+.power-up {
   text-align: center;
   margin-top: 3rem;
   background-color: rgba(0, 0, 0, 0.781);
@@ -160,7 +173,7 @@ li {
   transition: color 200ms;
 }
 .power-up:hover,
-.power-up:focus{
+.power-up:focus {
   color: #f2cb38;
   cursor: pointer;
 }
@@ -171,7 +184,7 @@ li {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+
   height: 100vh;
 
   background-color: #012a00;
@@ -182,7 +195,7 @@ li {
 }
 .game-screen-title {
   font-size: 40px;
-  margin-top: -4em;
+  margin-top: 1em;
   margin-bottom: 1em;
   width: 100%;
   text-align: center;
@@ -205,6 +218,10 @@ h3 {
 .game-grid div {
   width: 20px;
   height: 20px;
+}
+
+.time-left {
+  margin-top: 1rem;
 }
 
 .wall {
@@ -287,17 +304,51 @@ h3 {
   background-position: center;
   background-size: contain;
 }
+#win-or-lose {
+  font-size: 2.5rem;
+  line-height: 1.5em;
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.game-finished-div.container {
+  width: 85%;
+  height: 100vh;
+  padding: 0;
+  margin: 0 auto;
+}
+.game-finished-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+#your-score-div,
+.current-high-score-div {
+  margin-bottom: 4rem;
+  font-size: 1.7rem;
+  width: 100%;
+  text-align: center;
+}
+#play-again {
+  margin-top: 0;
+}
+#your-final-score,
+#high-score {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin-top: 3rem;
+  font-size: 3.5rem;
+  color: white;
+}
+.play-again-btn:hover,
+.play-again-btn:focus {
+  background-color: black;
+  color: #f2cb38;
+  transform: scale(1.1);
+}
 .none {
   display: none;
-}
-@media (min-width: 800px) {
-  body {
-    background-image: none;
-  }
-}
-@media (min-width: 1500px) and (min-height: 800px) {
-  body {
-    background-image: url(/images/background-PacMan.jpg);
-    background-size: contain;
-  }
 }

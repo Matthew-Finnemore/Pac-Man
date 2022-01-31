@@ -1,3 +1,4 @@
+// @ts-nocheck
 document.addEventListener("DOMContentLoaded", () => {
   const welcomePage = document.getElementById("start-page");
   const startGameBtn = document.getElementById("start-game-btn");
@@ -10,7 +11,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const questions = document.getElementById("question");
   const powerUpDiv = document.getElementById("power-up-div");
   let powerups = document.querySelectorAll(".power-up");
+  let powerUpEndTimeSlowGhost = document.getElementById("end-time-ghost-slow");
+  let powerUpTimer = document.getElementById("time-left-slow");
+  let deleteGhostTimer = document.getElementById("time-left-ghost");
+  let ghostReturnTimer = document.getElementById("ghost-return-timer");
+  let scaredGhostsP = document.getElementById("time-left-scared");
+  let scaredGhostTime = document.getElementById("end-time-ghost-scared");
+  let wrongAnswerDiv = document.getElementById("wrong-answer");
   let pacManDirection = "pac-man-right";
+  let numberofDots = 0;
   const width = 28;
   let score = 0;
   const squares = [];
@@ -24,6 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let answer;
   let answeringQuestion = false;
   const operatorChoice = ["x", "-", "+", "÷"];
+  let countDown;
+  let speedChange;
+  let secondsCountdownPaused = false;
+  let removedGhosts = [];
+  let scareTimer;
+  let secondsTimer;
+  
 
   // 0 - pac-dots
   // 1 - wall
@@ -130,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
       //add layout to the board
       if (chosenLayout[i] === 0) {
         squares[i].classList.add("pac-dot");
+        numberofDots++
       } else if (chosenLayout[i] === 1) {
         squares[i].classList.add("wall");
       } else if (chosenLayout[i] === 2) {
@@ -213,7 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
       pacDotEaten();
       eatenScaredGhost();
       powerPelletEaten();
-      // checkForGameOver();
+      checkForGameOver();
       checkForWin();
       checkForQuestion();
     }
@@ -222,23 +239,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function checkForQuestion() {
     switch (true) {
-      case score >= 10 && qOneAnswered === false:
+      case score >= 150 && qOneAnswered === false:
         makeQuestion();
         qOneAnswered = true;
         break;
-      case score >= 20 && qTwoAnswered === false:
+      case score >= 300 && qTwoAnswered === false:
         makeQuestion();
         qTwoAnswered = true;
         break;
-      case score >= 30 && qThreeAnswered === false:
+      case score >= 450 && qThreeAnswered === false:
         makeQuestion();
         qThreeAnswered = true;
         break;
-      case score >= 40 && qFourAnswered === false:
+      case score >= 600 && qFourAnswered === false:
         makeQuestion();
         qFourAnswered = true;
         break;
-      case score >= 50 && qFiveAnswered === false:
+      case score >= 750 && qFiveAnswered === false:
         makeQuestion();
         qFiveAnswered = true;
         break;
@@ -247,18 +264,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function submit() {
     let answerInput = document.querySelector("input");
-    answeringQuestion = false;
+    if (answeringQuestion === true) {
+      answeringQuestion = false;
+    }
 
     if (answerInput.value.toString() === answer.toString()) {
+      wrongAnswerDiv.classList.add("none");
       questions.classList.add("none");
       powerUpDiv.classList.remove("none"); // add opposite to powerup func
       answerInput.value = "";
-
       for (let powerup of powerups) {
         powerup.classList.remove("none");
       }
     } else {
-      alert("Your Wrong! Why not try again");
+      wrongAnswerDiv.classList.remove("none");
     }
   }
 
@@ -266,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function pacDotEaten() {
     if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
       score++;
+      numberofDots--;
       // @ts-ignore
       scoreDisplay.textContent = score;
       squares[pacmanCurrentIndex].classList.remove("pac-dot");
@@ -279,7 +299,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // @ts-ignore
       scoreDisplay.textContent = score;
       ghosts.forEach((ghost) => (ghost.isScared = true));
-      setTimeout(unScareGhosts, 10000);
+
+      if (scareTimer != null) {
+        clearTimeout(scareTimer);
+        scareTimer = setTimeout(unScareGhosts, 20000);
+        scaredGhostTimer();
+      } else {
+        scareTimer = setTimeout(unScareGhosts, 20000);
+        scaredGhostTimer();
+      }
       squares[pacmanCurrentIndex].classList.remove("power-pellet");
     }
   }
@@ -302,15 +330,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   //all my ghosts
-  const ghosts = [
+  let ghosts = [
     new Ghost("blinky", 348, 500),
-    new Ghost("pinky", 376, 250),
+    new Ghost("pinky", 376, 350),
     new Ghost("inky", 351, 320),
-    new Ghost("clyde", 379, 140),
+    new Ghost("clyde", 379, 340),
   ];
 
   function moveGhost(ghost) {
-    console.log(ghost.speed)
     const directions = [-1, +1, width, -width];
     let direction = directions[Math.floor(Math.random() * directions.length)];
 
@@ -394,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
         scoreDisplay.textContent = score;
         squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
       }
-      // checkForGameOver()
+      checkForGameOver();
     }, ghost.speed);
   }
 
@@ -404,22 +431,41 @@ document.addEventListener("DOMContentLoaded", () => {
       squares[pacmanCurrentIndex].classList.contains("ghost") &&
       !squares[pacmanCurrentIndex].classList.contains("scared-ghost")
     ) {
-      ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+      ghosts.forEach((ghost) => {
+        squares[ghost.currentIndex].classList.remove(
+          ghost.className,
+          "ghost",
+          "scared-ghost",
+          "pac-man-right"
+        );
+        clearInterval(ghost.timerId);
+      });
       document.removeEventListener("keyup", movePacman);
-      setTimeout(function () {
-        alert("Game Over");
-      }, 500);
+      localStorage.setItem("gameOver", "lost")
+      localStorage.setItem("score", score)
+      if (score > localStorage.getItem("highScore") || localStorage.getItem("highScore" === null)){
+        localStorage.setItem("highScore", score)
+      }
+      location.href = "gameover.html";
+    
     }
+
   }
 
   //check for a win - more is when this score is reached
   function checkForWin() {
-    if (score >= 1000) {
+    if (numberofDots === 0) {
       ghosts.forEach((ghost) => clearInterval(ghost.timerId));
       document.removeEventListener("keyup", movePacman);
-      setTimeout(function () {
-        alert("You have WON!");
-      }, 500);
+      localStorage.setItem("score", score);
+      localStorage.setItem("gameOver", "won");
+      if (
+        score > localStorage.getItem("highScore") ||
+        localStorage.getItem("highScore" === null)
+      ) {
+        localStorage.setItem("highScore", score);
+      }
+      location.href = "gameover.html";
     }
   }
   // if Scared ghost is in the square after key up
@@ -441,6 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function makeQuestion() {
     answeringQuestion = true;
+    secondsCountdownPaused = true;
     questionPanel.classList.remove("none");
     questions.classList.remove("none");
     document.getElementById("answer").focus();
@@ -450,16 +497,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let operatorRandom =
       operatorChoice[Math.floor(Math.random() * operatorChoice.length)];
     if (operatorRandom === "÷" && firstValue % secondValue != 0) {
-      console.log("here");
       operatorRandom =
         operatorChoice[Math.floor(Math.random() * (operatorChoice.length - 1))];
     }
-    console.log(firstValue, secondValue);
     if (operatorRandom === "-" && firstValue < secondValue) {
-      console.log("here");
       [firstValue, secondValue] = [secondValue, firstValue];
     }
-    console.log(firstValue, secondValue);
     operator.innerHTML = operatorRandom;
     numberOne.innerHTML = firstValue.toString();
     numberTwo.innerHTML = secondValue.toString();
@@ -483,24 +526,141 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("delete-ghost")
     .addEventListener("click", deleteGhost);
-  document
-    .getElementById("double-dot-points")
-    .addEventListener("click", doubleDotPoints);
 
   function slowGhosts() {
+    secondsCountdownPaused = false;
+    clearTimeout(speedChange);
+    secondsCountdown(20);
     ghosts.forEach((ghost) => {
       ghost.speed = 1000;
     });
     for (let powerup of powerups) {
       powerup.classList.add("none");
     }
-    powerUpDiv.classList.add("none"); // add opposite to powerup func
-    ghosts.forEach((ghost) => moveGhost(ghost)); //move to powerup choice
+    powerUpDiv.classList.add("none");
+    ghosts.forEach((ghost) => moveGhost(ghost));
+    questionPanel.classList.add("none");
+    speedChange = setTimeout(() => {
+      //changes back the speed of the ghost after the specified time.
+      ghosts.forEach((ghost) => {
+        switch (ghost.className) {
+          case "blinky":
+            ghost.speed = 520;
+            break;
+          case "pinky":
+            ghost.speed = 550;
+            break;
+          case "inky":
+            ghost.speed = 500;
+            break;
+          case "clyde":
+            ghost.speed = 550;
+            break;
+        }
+        ghosts.forEach((ghost) => clearInterval(ghost.timerId));
+        ghosts.forEach((ghost) => moveGhost(ghost));
+      });
+    }, 20000);
+  }
+  function deleteGhost() {
+    if (ghosts.length > 1) {
+      let removedGhost = ghosts.pop();
+      removedGhost.isScared = false;
+      removedGhosts.push(removedGhost);
+      squares[removedGhost.currentIndex].classList.remove(
+        removedGhost.className,
+        "ghost",
+        "scared-ghost",
+        "pac-man-right"
+      );
+      deletedGhostTimer();
+    }
+
+    secondsCountdownPaused = false;
+    ghosts.forEach((ghost) => moveGhost(ghost));
+    for (let powerup of powerups) {
+      powerup.classList.add("none");
+    }
+    powerUpDiv.classList.add("none");
     questionPanel.classList.add("none");
   }
 
-  function deleteGhost() {}
+  function secondsCountdown(time) {
+    if (countDown != null) {
+      clearInterval(countDown);
+    }
 
-  function doubleDotPoints() {}
+    powerUpTimer.classList.remove("none");
+    let seconds = time;
+    console.log(seconds);
+    powerUpEndTimeSlowGhost.textContent = seconds;
+    countDown = setInterval(() => {
+      if (!secondsCountdownPaused) {
+        powerUpEndTimeSlowGhost.textContent = seconds;
+        if (seconds != 0) {
+          seconds--;
+        } else {
+          powerUpTimer.classList.add("none");
+          clearInterval(countDown);
+        }
+        console.log("slowTimer");
+      }
+    }, 1000);
+  }
+
+  function deletedGhostTimer() {
+    if(secondsCountdownPaused){}
+    deleteGhostTimer.classList.remove("none");
+    let seconds = 20;
+    ghostReturnTimer.textContent = seconds;
+    let secondsTimer = setInterval(() => {
+      if (!secondsCountdownPaused) {
+        seconds--;
+        console.log("delete Timer")
+        ghostReturnTimer.textContent = seconds;
+        if (seconds === 0) {
+          returnGhost()
+          clearInterval(secondsTimer);
+        }
+      }
+    }, 1000);
+  }
+
+    function returnGhost() {
+      removedGhosts.forEach((ghost) => {
+        ghosts.push(ghost);
+      });
+      ghosts.forEach((ghost) => {
+        squares[ghost.currentIndex].classList.remove(
+          ghost.className,
+          "ghost",
+          "scared-ghost",
+          "pac-man-right"
+        );
+        clearInterval(ghost.timerId);
+        moveGhost(ghost);
+      });
+      removedGhosts = [];
+      deleteGhostTimer.classList.add("none");
+    }
+  
+
+
+  function scaredGhostTimer() {
+    clearInterval(secondsTimer);
+    scaredGhostsP.classList.remove("none");
+    let seconds = 20;
+    scaredGhostTime.textContent = seconds + " ";
+    secondsTimer = setInterval(() => {
+      if (!secondsCountdownPaused) {
+        seconds--;
+        scaredGhostTime.textContent = seconds + " ";
+        if (seconds === 0) {
+          clearInterval(secondsTimer);
+          scaredGhostsP.classList.add("none");
+        }
+      }
+    }, 1000);
+  }
   //end of tags
 });
