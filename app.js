@@ -655,6 +655,7 @@ document.addEventListener("DOMContentLoaded", () => {
   touchBody.addEventListener(
     "touchstart",
     function (e) {
+      e.preventDefault();
       if (answeringQuestion === false) {
         squares[pacmanCurrentIndex].classList.remove(
           "pac-man",
