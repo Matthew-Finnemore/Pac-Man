@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialise all of the variables //
   //                                 //
   const welcomePage = document.getElementById("start-page");
+  const touchBody = document.getElementById("body");
   const startGameBtn = document.getElementById("start-game-btn");
   const scoreDisplay = document.getElementById("score");
   const questionPanel = document.getElementById("questionPanel");
@@ -651,4 +652,92 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }, 1000);
   }
+  touchBody.addEventListener(
+    "touchstart",
+    function (e) {
+      if (answeringQuestion === false) {
+        squares[pacmanCurrentIndex].classList.remove(
+          "pac-man",
+          "pac-man-up",
+          "pac-man-right",
+          "pac-man-left",
+          "pac-man-down"
+        );
+      }
+      // Iterate through the touch points that have moved and log each
+      // of the pageX/Y coordinates. The unit of each coordinate is CSS pixels
+      if (
+        e.changedTouches[0].pageX > 300 &&
+        e.changedTouches[0].pageY < 560 &&
+        e.changedTouches[0].pageY > 380
+      ) {
+        console.log("right");
+        if (
+          pacmanCurrentIndex % width < width - 1 &&
+          !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
+        ) {
+          pacmanCurrentIndex += 1;
+          pacManDirection = "pac-man-right";
+        }
+        if (squares[pacmanCurrentIndex + 1] === squares[392]) {
+          pacmanCurrentIndex = 364;
+        }
+        console.log(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
+      } else if (
+        e.changedTouches[0].pageX < 300 &&
+        e.changedTouches[0].pageY < 560 &&
+        e.changedTouches[0].pageY > 380
+      ) {
+        console.log("left");
+        if (
+          pacmanCurrentIndex % width !== 0 &&
+          !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
+        ) {
+          pacmanCurrentIndex -= 1;
+          pacManDirection = "pac-man-left";
+        }
+        if (squares[pacmanCurrentIndex - 1] === squares[363]) {
+          pacmanCurrentIndex = 391;
+
+          console.log(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
+        }
+      } else if (e.changedTouches[0].pageY < 380) {
+        console.log("up");
+        if (
+          pacmanCurrentIndex - width >= 0 &&
+          !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
+        ) {
+          pacmanCurrentIndex -= width;
+          pacManDirection = "pac-man-up";
+        }
+      } else if (e.changedTouches[0].pageY > 560) {
+        console.log("down");
+        if (
+          pacmanCurrentIndex + width < width * width &&
+          !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
+          !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
+        ) {
+          pacmanCurrentIndex += width;
+          pacManDirection = "pac-man-down";
+        }
+      }
+      console.log("here");
+
+      squares[pacmanCurrentIndex].classList.add("pac-man");
+      squares[pacmanCurrentIndex].classList.add(pacManDirection);
+      if (squares[pacmanCurrentIndex].classList.contains("ghost")) {
+        eatenScaredGhost();
+      }
+      pacDotEaten();
+      eatenScaredGhost();
+      powerPelletEaten();
+      checkForGameOver();
+      checkForWin();
+      checkForQuestion();
+    },
+    false
+  );
 });
