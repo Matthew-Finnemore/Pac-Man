@@ -22,12 +22,14 @@ body {
 }
 .container {
   width: clamp(40ch, 60ch, 70%);
-  margin: 3em auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100vh;
 }
 .welcome {
+  margin-top: 2rem;
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
 }
