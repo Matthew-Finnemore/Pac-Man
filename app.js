@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let removedGhosts = [];
   let scareTimer;
   let secondsTimer;
-  
 
   // 0 - pac-dots
   // 1 - wall
@@ -142,11 +141,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const square = document.createElement("div");
       grid.appendChild(square);
       squares.push(square);
+      squares[i].classList.add(i);
 
       //add layout to the board
       if (chosenLayout[i] === 0) {
         squares[i].classList.add("pac-dot");
-        numberofDots++
+        numberofDots++;
       } else if (chosenLayout[i] === 1) {
         squares[i].classList.add("wall");
       } else if (chosenLayout[i] === 2) {
@@ -343,7 +343,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ghost.timerId = setInterval(function () {
       //if the next squre your ghost is going to go to does not have a ghost and does not have a wall
-
+      if (ghost.currentIndex === 294) {
+        direction = +1  // help escaping the box
+      }
+      if (ghost.currentIndex === 293) {
+        direction = -1
+      }
       if (
         ghost.currentIndex === 349 ||
         ghost.currentIndex === 377 ||
@@ -354,15 +359,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ghost.currentIndex === 378 ||
         ghost.currentIndex === 350
       ) {
-        squares[ghost.currentIndex].classList.remove(ghost.className);
-        squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
-        ghost.currentIndex += -width;
-        squares[ghost.currentIndex].classList.add(
-          ghost.className,
-          "ghost",
-          "pac-man-right"
-        );
-      } else if (
+        direction = -width
+      }
+      if (
         !squares[ghost.currentIndex + direction].classList.contains("ghost") &&
         !squares[ghost.currentIndex + direction].classList.contains("wall")
       ) {
@@ -441,15 +440,16 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(ghost.timerId);
       });
       document.removeEventListener("keyup", movePacman);
-      localStorage.setItem("gameOver", "lost")
-      localStorage.setItem("score", score)
-      if (score > localStorage.getItem("highScore") || localStorage.getItem("highScore" === null)){
-        localStorage.setItem("highScore", score)
+      localStorage.setItem("gameOver", "lost");
+      localStorage.setItem("score", score);
+      if (
+        score > localStorage.getItem("highScore") ||
+        localStorage.getItem("highScore" === null)
+      ) {
+        localStorage.setItem("highScore", score);
       }
       location.href = "gameover.html";
-    
     }
-
   }
 
   //check for a win - more is when this score is reached
@@ -609,42 +609,41 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function deletedGhostTimer() {
-    if(secondsCountdownPaused){}
+    if (secondsCountdownPaused) {
+    }
     deleteGhostTimer.classList.remove("none");
     let seconds = 20;
     ghostReturnTimer.textContent = seconds;
     let secondsTimer = setInterval(() => {
       if (!secondsCountdownPaused) {
         seconds--;
-        console.log("delete Timer")
+        console.log("delete Timer");
         ghostReturnTimer.textContent = seconds;
         if (seconds === 0) {
-          returnGhost()
+          returnGhost();
           clearInterval(secondsTimer);
         }
       }
     }, 1000);
   }
 
-    function returnGhost() {
-      removedGhosts.forEach((ghost) => {
-        ghosts.push(ghost);
-      });
-      ghosts.forEach((ghost) => {
-        squares[ghost.currentIndex].classList.remove(
-          ghost.className,
-          "ghost",
-          "scared-ghost",
-          "pac-man-right"
-        );
-        clearInterval(ghost.timerId);
-        moveGhost(ghost);
-      });
-      removedGhosts = [];
-      deleteGhostTimer.classList.add("none");
-    }
-  
-
+  function returnGhost() {
+    removedGhosts.forEach((ghost) => {
+      ghosts.push(ghost);
+    });
+    ghosts.forEach((ghost) => {
+      squares[ghost.currentIndex].classList.remove(
+        ghost.className,
+        "ghost",
+        "scared-ghost",
+        "pac-man-right"
+      );
+      clearInterval(ghost.timerId);
+      moveGhost(ghost);
+    });
+    removedGhosts = [];
+    deleteGhostTimer.classList.add("none");
+  }
 
   function scaredGhostTimer() {
     clearInterval(secondsTimer);
